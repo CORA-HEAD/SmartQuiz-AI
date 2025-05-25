@@ -42,8 +42,8 @@ OPENAI_API_KEY=your-openai-api-key
 ![Login Page](./screenshots/Login-page.png)
 
 ### Quiz Page
-![Quiz Page](./screenshots/Quiz-page)
+![Quiz Page](./screenshots/Quiz-page.png)
 
 
 ### Prompt Page
-![Prompt Page](./screenshots/Prompt-page)
+![Prompt Page](./screenshots/Prompt-page.png)
