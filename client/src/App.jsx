@@ -1,6 +1,6 @@
 // src/App.js
 import { useState } from "react";
-import Login from "./Login";
+import Login from "./login";
 import Quiz from "./Quiz";
 
 function App() {
