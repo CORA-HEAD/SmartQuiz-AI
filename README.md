@@ -32,9 +32,6 @@ SmartQuiz AI is a React-based quiz application that generates questions using AI
 - Backend can be hosted on **Render**, **Railway**, or similar platforms  
 - Use environment variables for configuration:  
 
-```env
-VITE_BACKEND_URL=https://your-backend-url.com
-OPENAI_API_KEY=your-openai-api-key
 
 ## 📸 Screenshots
 
