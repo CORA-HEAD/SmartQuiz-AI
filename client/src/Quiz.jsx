@@ -3,11 +3,9 @@ import axios from "axios";
 import { db } from "./firebase";
 import { collection, addDoc } from "firebase/firestore";
 
-
 const baseURL = import.meta.env.VITE_BACKEND_URL;
 
 function Quiz({ user }) {
-  // State variables for managing quiz
   const [topic, setTopic] = useState("");
   const [questions, setQuestions] = useState([]);
   const [selectedAnswers, setSelectedAnswers] = useState({});
@@ -17,7 +15,6 @@ function Quiz({ user }) {
 
   const inputRef = useRef(null);
 
-  // Fetch questions from backend based on topic
   const startQuiz = async () => {
     if (!topic.trim()) {
       alert("Please enter a valid topic.");
@@ -37,14 +34,12 @@ function Quiz({ user }) {
     }
   };
 
-  // Handle selecting an answer
   const handleSelect = (qIndex, optIndex) => {
     if (!submitted) {
       setSelectedAnswers((prev) => ({ ...prev, [qIndex]: optIndex }));
     }
   };
 
-  // Calculate score and save result
   const finishQuiz = async () => {
     if (Object.keys(selectedAnswers).length === 0) {
       alert("Please select at least one answer.");
@@ -53,26 +48,27 @@ function Quiz({ user }) {
 
     let newScore = 0;
 
-    // Compare selected answers to correct ones
     questions.forEach((q, idx) => {
       const selectedIdx = selectedAnswers[idx];
       if (selectedIdx === undefined) return;
 
-      const userAnswer = q.options[selectedIdx]
-        ?.toString()
-        .trim()
-        .toLowerCase();
-      const correctAnswer = q.answer?.toString().trim().toLowerCase();
+      const optionLetter = String.fromCharCode(97 + selectedIdx); // 'a', 'b', 'c', ...
 
-      if (userAnswer === correctAnswer) {
+      console.log(
+        `Q${idx + 1}: user="${optionLetter}" vs correct="${q.answer?.toLowerCase()}"`
+      );
+
+      if (optionLetter === q.answer?.toLowerCase()) {
+        console.log("✅ Correct");
         newScore++;
+      } else {
+        console.log("❌ Incorrect");
       }
     });
 
     setScore(newScore);
     setSubmitted(true);
 
-    // Save to Firestore if user is logged in
     if (user?.uid) {
       try {
         await addDoc(collection(db, "scores"), {
@@ -90,7 +86,6 @@ function Quiz({ user }) {
     }
   };
 
-  // Reset quiz
   const resetQuiz = () => {
     setTopic("");
     setQuestions([]);
@@ -103,7 +98,6 @@ function Quiz({ user }) {
 
   return (
     <div className="p-4 max-w-2xl mx-auto">
-      {/* Topic input screen */}
       {!started && (
         <div className="flex flex-col gap-4" ref={inputRef}>
           <input
@@ -122,7 +116,6 @@ function Quiz({ user }) {
         </div>
       )}
 
-      {/* Quiz questions and options */}
       {started && questions.length > 0 && (
         <div className="mt-6 space-y-6">
           {questions.map((q, idx) => (
@@ -133,10 +126,9 @@ function Quiz({ user }) {
               <div className="space-y-2">
                 {q.options.map((opt, i) => {
                   const selected = selectedAnswers[idx] === i;
+                  const optionLetter = String.fromCharCode(97 + i);
                   const isCorrect =
-                    submitted &&
-                    opt.toString().trim().toLowerCase() ===
-                      q.answer?.toString().trim().toLowerCase();
+                    submitted && optionLetter === q.answer?.toLowerCase();
 
                   let bgColor = "bg-white";
                   if (isCorrect) bgColor = "bg-green-200 border-green-500";
@@ -157,7 +149,6 @@ function Quiz({ user }) {
                 })}
               </div>
 
-              {/* Only show correct answer after submission */}
               {submitted && (
                 <div className="mt-2 text-sm text-gray-700">
                   Correct Answer: <strong>{q.answer}</strong>
@@ -166,7 +157,6 @@ function Quiz({ user }) {
             </div>
           ))}
 
-          {/* Submit or Show Score */}
           {!submitted ? (
             <button
               onClick={finishQuiz}
@@ -190,7 +180,6 @@ function Quiz({ user }) {
         </div>
       )}
 
-      {/* Handle empty question list */}
       {started && questions.length === 0 && (
         <div className="mt-6 text-center">
           <p>No questions available for this topic.</p>
