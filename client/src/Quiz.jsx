@@ -3,6 +3,9 @@ import axios from "axios";
 import { db } from "./firebase";
 import { collection, addDoc } from "firebase/firestore";
 
+
+const baseURL = import.meta.env.VITE_BACKEND_URL;
+
 function Quiz({ user }) {
   // State variables for managing quiz
   const [topic, setTopic] = useState("");
@@ -22,7 +25,7 @@ function Quiz({ user }) {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/quiz", { topic });
+      const res = await axios.post(`${baseURL}/api/quiz`, { topic });
       setQuestions(res.data.questions || []);
       setStarted(true);
       setSubmitted(false);
