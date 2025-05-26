@@ -132,7 +132,7 @@ function Quiz({ user }) {
 
                   let bgColor = "bg-white";
                   if (isCorrect) bgColor = "bg-green-200 border-green-500";
-                  else if (selected) bgColor = "bg-blue-100";
+                  else if (selected) bgColor = "bg-blue-700";
 
                   return (
                     <button
